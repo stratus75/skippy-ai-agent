@@ -1,0 +1,27 @@
+// Add this as a Code node RIGHT AFTER your webhook, BEFORE your AI response
+
+const message = $json.body.message?.toLowerCase() || '';
+
+// Home automation keywords
+const homeKeywords = [
+  'light', 'lights', 'lamp', 'bulb',
+  'turn on', 'turn off', 'switch',
+  'movie mode', 'scene', 'activate',
+  'music', 'play', 'volume',
+  'status', 'devices', 'home',
+  'thermostat', 'temperature',
+  'dim', 'bright', 'color',
+  'red', 'blue', 'green', 'yellow'
+];
+
+// Check if this is a home automation command
+const isHomeCommand = homeKeywords.some(keyword => message.includes(keyword));
+
+// Output with routing information
+return [{
+  message: $json.body.message,
+  user: $json.body.user || 'Unknown',
+  isHomeCommand: isHomeCommand,
+  route: isHomeCommand ? 'home' : 'ai',
+  timestamp: new Date().toISOString()
+}];

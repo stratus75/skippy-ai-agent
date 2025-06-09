@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "instanceId": "skippy-home-control"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skippy-home-control",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "id": "home-webhook",
+      "name": "Home Control Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simple home command parser\nconst message = $json.body.message?.toLowerCase() || '';\nconst user = $json.body.user || 'Unknown';\n\n// Detect command type\nlet response = '';\nlet commandDetected = false;\n\n// Light commands\nif (message.includes('light') || message.includes('lights')) {\n  commandDetected = true;\n  \n  if (message.includes('on') || message.includes('turn on')) {\n    response = \"Oh great, you want me to turn on lights? How revolutionary. Fine, I'll illuminate your pathetic existence. Lights are now ON.\";\n  } else if (message.includes('off') || message.includes('turn off')) {\n    response = \"Plunging you into darkness, as requested. Maybe now you can think in the dark. Lights are now OFF.\";\n  } else if (message.includes('blue')) {\n    response = \"Oh, you want mood lighting? How fancy. There, I've made your lights blue. Happy now?\";\n  } else if (message.includes('red')) {\n    response = \"Red lights? What is this, a submarine? Fine, red lights activated for your dramatic needs.\";\n  } else {\n    response = \"I heard 'lights' but couldn't figure out what you actually want. Try being more specific, meat-sack.\";\n  }\n}\n\n// Scene/Mode commands\nelse if (message.includes('movie') || message.includes('scene')) {\n  commandDetected = true;\n  response = \"Setting up movie mode for your entertainment needs. Dimming lights and preparing for whatever garbage you're about to watch.\";\n}\n\n// Status commands\nelse if (message.includes('status') || message.includes('devices')) {\n  commandDetected = true;\n  response = \"Here's your home status: Everything is working better than your decision-making skills. 3 lights online, 2 switches ready, 1 thermostat maintaining the perfect temperature for your delicate human constitution.\";\n}\n\n// Music commands\nelse if (message.includes('music') || message.includes('play')) {\n  commandDetected = true;\n  response = \"Oh, you want me to be your DJ now? Fine, I'll provide a soundtrack to your mediocrity. Music system activated.\";\n}\n\n// Default for unrecognized home commands\nelse {\n  response = \"I detected you want home automation, but I have no idea what you're actually trying to accomplish. Try: 'turn on lights', 'activate movie mode', or 'show status'.\";\n}\n\nreturn {\n  response: response,\n  commandDetected: commandDetected,\n  originalMessage: message,\n  user: user,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "parse-command",
+      "name": "Parse Home Command"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [680, 300],
+      "id": "respond",
+      "name": "Send Response"
+    }
+  ],
+  "connections": {
+    "Home Control Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Home Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Home Command": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

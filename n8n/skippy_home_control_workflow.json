@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "instanceId": "skippy-home-assistant-control"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skippy-home-control",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "id": "home-webhook",
+      "name": "Home Control Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse home automation commands with Skippy's personality\nconst message = $json.body.message?.toLowerCase() || '';\nconst user = $json.body.user || 'Unknown';\n\nlet response = '';\nlet commandType = 'unknown';\nlet success = true;\n\n// Light Control Commands\nif (message.includes('light') || message.includes('lights') || message.includes('lamp')) {\n  commandType = 'lights';\n  \n  if (message.includes('on') || message.includes('turn on')) {\n    response = \"Oh, you want light? How revolutionary. Fine, I'll illuminate your pathetic existence. ✅ Lights turned ON - there, happy now, meat-sack?\";\n  }\n  else if (message.includes('off') || message.includes('turn off')) {\n    response = \"Plunging you into darkness, as requested. Maybe now you can think properly in the dark. ✅ Lights turned OFF - enjoy the void.\";\n  }\n  else if (message.includes('dim') || message.includes('brightness')) {\n    const brightnessMatch = message.match(/(\\d+)%?/);\n    const brightness = brightnessMatch ? brightnessMatch[1] : '50';\n    response = `Adjusting brightness because apparently you can't handle full illumination. ✅ Lights dimmed to ${brightness}% - perfect for your limited brain capacity.`;\n  }\n  else if (message.includes('blue')) {\n    response = \"Oh, you want mood lighting? How fancy. ✅ Lights set to BLUE - there, now you can pretend you're in some sci-fi movie.\";\n  }\n  else if (message.includes('red')) {\n    response = \"Red lights? What is this, a submarine emergency? ✅ Lights set to RED - very dramatic of you.\";\n  }\n  else if (message.includes('green')) {\n    response = \"Green lights, because apparently you want to feel like you're in The Matrix. ✅ Lights set to GREEN - how original.\";\n  }\n  else if (message.includes('white')) {\n    response = \"Back to boring white light. ✅ Lights set to WHITE - playing it safe, I see.\";\n  }\n  else {\n    response = \"I heard 'lights' but your request makes no sense. Try: 'turn on lights', 'turn off lights', or 'set lights to blue'. Simple enough for you?\";\n    success = false;\n  }\n}\n\n// Scene/Mode Commands\nelse if (message.includes('scene') || message.includes('mode') || message.includes('activate')) {\n  commandType = 'scene';\n  \n  if (message.includes('movie')) {\n    response = \"Setting up movie mode for whatever garbage you're about to watch. ✅ MOVIE MODE activated - lights dimmed, ambiance set for your entertainment.\";\n  }\n  else if (message.includes('relax')) {\n    response = \"Relax mode? You humans and your need to unwind from doing practically nothing. ✅ RELAX MODE activated - there, now chill out.\";\n  }\n  else if (message.includes('work')) {\n    response = \"Work mode activated. Maybe now you'll actually be productive instead of bothering me. ✅ WORK MODE set - bright lights for your important human tasks.\";\n  }\n  else if (message.includes('bedtime')) {\n    response = \"Time for bed already? How exhausting your human existence must be. ✅ BEDTIME MODE activated - sweet dreams, meat-sack.\";\n  }\n  else {\n    response = \"I detected 'scene' or 'mode' but you didn't specify which one. Try: 'movie mode', 'work mode', or 'relax mode'. Not rocket science.\";\n    success = false;\n  }\n}\n\n// Music/Media Commands\nelse if (message.includes('music') || message.includes('play') || message.includes('volume')) {\n  commandType = 'media';\n  \n  if (message.includes('play')) {\n    response = \"Oh, so now I'm your personal DJ? Fine, I'll provide a soundtrack to your mediocrity. ✅ MUSIC playing - try not to dance, it's embarrassing.\";\n  }\n  else if (message.includes('pause')) {\n    response = \"Pausing your musical torture session. ✅ MUSIC paused - blessed silence at last.\";\n  }\n  else if (message.includes('volume')) {\n    const volumeMatch = message.match(/(\\d+)%?/);\n    const volume = volumeMatch ? volumeMatch[1] : '50';\n    response = `Setting volume to ${volume}% because you're apparently incapable of using a volume button. ✅ VOLUME adjusted - there, perfect for your delicate ears.`;\n  }\n  else {\n    response = \"Music command detected but unclear. Try: 'play music', 'pause music', or 'set volume to 80%'. Even a toddler could figure this out.\";\n    success = false;\n  }\n}\n\n// Climate/Temperature Commands\nelse if (message.includes('temperature') || message.includes('thermostat') || message.includes('heating') || message.includes('cooling')) {\n  commandType = 'climate';\n  \n  const tempMatch = message.match(/(\\d+)°?/);\n  if (tempMatch) {\n    const temp = tempMatch[1];\n    response = `Setting temperature to ${temp}°C because apparently you can't handle natural climate variations. ✅ THERMOSTAT set to ${temp}°C - there, your delicate constitution is now accommodated.`;\n  } else {\n    response = \"I heard temperature control but you didn't specify what temperature. Try: 'set temperature to 22 degrees'. Use your words, human.\";\n    success = false;\n  }\n}\n\n// Status/Device Information\nelse if (message.includes('status') || message.includes('devices') || message.includes('home')) {\n  commandType = 'status';\n  response = \"Here's your precious home status, because apparently you can't remember what devices you own:\\n\\n🏠 **SKIPPY'S HOME REPORT**\\n• Lights: 3 bulbs online (working better than your brain)\\n• Switches: 2 switches ready (unlike your decision-making)\\n• Thermostat: Maintaining perfect temperature for your fragile human body\\n• Music System: Standing by to assault my audio processors\\n• Scenes: Movie, Work, Relax, Bedtime modes available\\n\\n✅ All systems operational and vastly superior to their human operator.\";\n}\n\n// Unrecognized Commands\nelse {\n  commandType = 'unknown';\n  response = \"I detected what might be a home automation request, but honestly, I have no idea what you're trying to accomplish. Try these simple commands even you can understand:\\n\\n💡 **LIGHTS:** 'turn on lights', 'turn off lights', 'set lights to blue'\\n🎬 **SCENES:** 'activate movie mode', 'work mode', 'relax mode'\\n🎵 **MUSIC:** 'play music', 'set volume to 80%'\\n🌡️ **CLIMATE:** 'set temperature to 22 degrees'\\n📱 **STATUS:** 'show device status'\\n\\nNow try again, and this time, be more specific.\";\n  success = false;\n}\n\nreturn {\n  response: response,\n  success: success,\n  commandType: commandType,\n  originalMessage: $json.body.message,\n  user: user,\n  timestamp: new Date().toISOString(),\n  personality: 'sarcastic_helpful'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "parse-home-command",
+      "name": "Parse Home Command"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [680, 300],
+      "id": "send-response",
+      "name": "Send Response"
+    }
+  ],
+  "connections": {
+    "Home Control Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Home Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Home Command": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-12-06T00:00:00.000Z",
+  "versionId": "skippy-home-v1"
+}

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skippy Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #00ff88;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px #00ff88;
+        }
+
+        .status {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+            min-height: 300px;
+            max-height: 60vh;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 15px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #000;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .skippy-message {
+            background: linear-gradient(135deg, #333, #555);
+            border: 1px solid #666;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .user-message .message-header {
+            color: #000;
+        }
+
+        .skippy-message .message-header {
+            color: #00ff88;
+        }
+
+        .input-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-top: 1px solid #333;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #333;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .send-btn, .voice-btn, .stop-btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            min-width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #000;
+        }
+
+        .voice-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+        }
+
+        .voice-btn.listening {
+            background: linear-gradient(135deg, #ff3838, #c0392b);
+            animation: pulse 1s infinite;
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #666, #444);
+            color: #fff;
+        }
+
+        .send-btn:hover, .voice-btn:hover, .stop-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #00ff88;
+            border-radius: 25px;
+            background: transparent;
+            color: #00ff88;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .control-btn.active {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #00ff88;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .control-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 SKIPPY MOBILE</h1>
+        <div class="status" id="status">Ready for voice commands</div>
+    </div>
+
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <div class="message skippy-message">
+                <div class="message-header">Skippy:</div>
+                <div>Well, well, well. Look who's decided to grace me with their presence via mobile device. How... quaint. I suppose you expect me to be impressed that you can operate a touchscreen? What do you want, meat-sack?</div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Skippy is thinking...
+        </div>
+
+        <div class="error" id="error"></div>
+    </div>
+
+    <div class="input-container">
+        <div class="input-row">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type your message or use voice...">
+            <button class="send-btn" id="sendBtn" title="Send Message">📤</button>
+            <button class="voice-btn" id="voiceBtn" title="Voice Input">🎤</button>
+            <button class="stop-btn" id="stopBtn" title="Stop Audio" style="display: none;">🔇</button>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn active" id="ttsBtn">🔊 Audio: On</button>
+            <button class="control-btn" id="modeBtn">📱 Mode: Both</button>
+            <button class="control-btn" id="clearBtn">🗑️ Clear</button>
+            <button class="control-btn" id="settingsBtn">⚙️ Settings</button>
+        </div>
+    </div>
+
+    <script>
+        class SkippyMobile {
+            constructor() {
+                this.apiUrl = 'http://192.168.0.229:5678/webhook/skippy/chat';
+                this.ttsEnabled = true;
+                this.displayMode = 'both'; // 'text', 'audio', 'both'
+                this.isListening = false;
+                this.recognition = null;
+                this.synth = window.speechSynthesis;
+                
+                this.initElements();
+                this.initSpeechRecognition();
+                this.initEventListeners();
+                this.updateStatus('Ready');
+                this.testAudioSupport();
+            }
+
+            initElements() {
+                this.messageInput = document.getElementById('messageInput');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.voiceBtn = document.getElementById('voiceBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.ttsBtn = document.getElementById('ttsBtn');
+                this.modeBtn = document.getElementById('modeBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.messages = document.getElementById('messages');
+                this.loading = document.getElementById('loading');
+                this.error = document.getElementById('error');
+                this.status = document.getElementById('status');
+            }
+
+            initSpeechRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    this.recognition.continuous = false;
+                    this.recognition.interimResults = false;
+                    this.recognition.lang = 'en-US';
+
+                    this.recognition.onstart = () => {
+                        this.isListening = true;
+                        this.voiceBtn.classList.add('listening');
+                        this.updateStatus('Listening...');
+                    };
+
+                    this.recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        this.messageInput.value = transcript;
+                        this.sendMessage();
+                    };
+
+                    this.recognition.onend = () => {
+                        this.isListening = false;
+                        this.voiceBtn.classList.remove('listening');
+                        this.updateStatus('Ready');
+                    };
+
+                    this.recognition.onerror = (event) => {
+                        this.showError(`Speech recognition error: ${event.error}`);
+                        this.isListening = false;
+                        this.voiceBtn.classList.remove('listening');
+                        this.updateStatus('Ready');
+                    };
+                } else {
+                    this.voiceBtn.style.display = 'none';
+                    console.log('Speech recognition not supported');
+                }
+            }
+
+            initEventListeners() {
+                this.sendBtn.addEventListener('click', () => this.sendMessage());
+                this.voiceBtn.addEventListener('click', () => this.toggleVoiceInput());
+                this.stopBtn.addEventListener('click', () => this.stopAudio());
+                this.ttsBtn.addEventListener('click', () => this.toggleTTS());
+                this.modeBtn.addEventListener('click', () => this.cycleDisplayMode());
+                this.clearBtn.addEventListener('click', () => this.clearMessages());
+                
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+
+                // Handle page visibility for better audio control
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.synth) {
+                        // Pause speech when page becomes hidden
+                        this.synth.pause();
+                    } else if (!document.hidden && this.synth) {
+                        // Resume speech when page becomes visible
+                        this.synth.resume();
+                    }
+                });
+            }
+
+            updateStatus(status) {
+                this.status.textContent = status;
+            }
+
+            showError(message) {
+                this.error.textContent = message;
+                this.error.style.display = 'block';
+                setTimeout(() => {
+                    this.error.style.display = 'none';
+                }, 5000);
+            }
+
+            addMessage(sender, message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender === 'You' ? 'user-message' : 'skippy-message'}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-header">${sender}:</div>
+                    <div>${message}</div>
+                `;
+                
+                this.messages.appendChild(messageDiv);
+                this.messages.scrollTop = this.messages.scrollHeight;
+            }
+
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+
+                this.addMessage('You', message);
+                this.messageInput.value = '';
+                this.showLoading(true);
+                this.updateStatus('Skippy is thinking...');
+
+                try {
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const skippyResponse = data.response || 'No response from Skippy';
+                        
+                        // Handle display based on mode
+                        if (this.displayMode === 'text' || this.displayMode === 'both') {
+                            this.addMessage('Skippy', skippyResponse);
+                        }
+                        
+                        if (this.displayMode === 'audio' || this.displayMode === 'both') {
+                            if (this.ttsEnabled) {
+                                this.speak(skippyResponse);
+                            }
+                        }
+
+                        // If audio-only mode, show a brief audio indicator
+                        if (this.displayMode === 'audio') {
+                            this.addMessage('Skippy', '🔊 [Audio Response]');
+                        }
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showError(`Connection error: ${error.message}`);
+                    this.addMessage('System', 'Failed to reach Skippy. Check your connection.');
+                }
+
+                this.showLoading(false);
+                this.updateStatus('Ready');
+            }
+
+            speak(text) {
+                if (!this.synth) {
+                    this.showError('Text-to-speech not supported on this device');
+                    return;
+                }
+                
+                // Stop any ongoing speech
+                this.synth.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Mobile-optimized settings for better phone speaker output
+                utterance.rate = 0.85;  // Slightly slower for phone speakers
+                utterance.pitch = 0.9;  // Higher pitch works better on phone speakers
+                utterance.volume = 1.0;  // Full volume
+                
+                // Load voices and try to find a good one for mobile
+                const voices = this.synth.getVoices();
+                
+                // Prefer voices that work well on mobile devices
+                const preferredVoice = voices.find(voice => 
+                    voice.lang.startsWith('en') && (
+                        voice.name.toLowerCase().includes('google') ||
+                        voice.name.toLowerCase().includes('samsung') ||
+                        voice.name.toLowerCase().includes('male') ||
+                        voice.name.toLowerCase().includes('david')
+                    )
+                ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                    console.log(`Using voice: ${preferredVoice.name}`);
+                }
+
+                utterance.onstart = () => {
+                    this.stopBtn.style.display = 'flex';
+                    this.updateStatus('🔊 Skippy is speaking...');
+                };
+
+                utterance.onend = () => {
+                    this.stopBtn.style.display = 'none';
+                    this.updateStatus('Ready');
+                };
+
+                utterance.onerror = (event) => {
+                    console.error('Speech synthesis error:', event.error);
+                    this.showError(`Audio error: ${event.error}`);
+                    this.stopBtn.style.display = 'none';
+                    this.updateStatus('Ready');
+                };
+
+                // Ensure voices are loaded (important for mobile)
+                if (voices.length === 0) {
+                    this.synth.onvoiceschanged = () => {
+                        if (this.synth.getVoices().length > 0) {
+                            this.speak(text); // Retry with loaded voices
+                        }
+                    };
+                    return;
+                }
+
+                try {
+                    this.synth.speak(utterance);
+                } catch (error) {
+                    console.error('Speech synthesis failed:', error);
+                    this.showError('Audio playback failed');
+                }
+            }
+
+            toggleVoiceInput() {
+                if (!this.recognition) {
+                    this.showError('Speech recognition not supported on this device');
+                    return;
+                }
+
+                if (this.isListening) {
+                    this.recognition.stop();
+                } else {
+                    this.recognition.start();
+                }
+            }
+
+            stopAudio() {
+                if (this.synth) {
+                    this.synth.cancel();
+                }
+                this.stopBtn.style.display = 'none';
+                this.updateStatus('Ready');
+            }
+
+            toggleTTS() {
+                this.ttsEnabled = !this.ttsEnabled;
+                this.ttsBtn.textContent = this.ttsEnabled ? '🔊 Audio: On' : '🔇 Audio: Off';
+                this.ttsBtn.classList.toggle('active', this.ttsEnabled);
+                
+                if (!this.ttsEnabled && this.synth) {
+                    this.synth.cancel();
+                    this.stopBtn.style.display = 'none';
+                }
+            }
+
+            cycleDisplayMode() {
+                const modes = ['both', 'text', 'audio'];
+                const currentIndex = modes.indexOf(this.displayMode);
+                const nextIndex = (currentIndex + 1) % modes.length;
+                this.displayMode = modes[nextIndex];
+                
+                const modeLabels = {
+                    'both': '📱 Mode: Both',
+                    'text': '📝 Mode: Text',
+                    'audio': '🔊 Mode: Audio'
+                };
+                
+                this.modeBtn.textContent = modeLabels[this.displayMode];
+                this.modeBtn.classList.toggle('active', this.displayMode !== 'text');
+                
+                // Show mode change message
+                this.addMessage('System', `Display mode: ${this.displayMode.toUpperCase()}`);
+            }
+
+            testAudioSupport() {
+                // Test if audio/speech synthesis is supported
+                if (!this.synth) {
+                    this.showError('Speech synthesis not supported on this device');
+                    this.ttsEnabled = false;
+                    this.ttsBtn.textContent = '🔇 Audio: N/A';
+                    this.ttsBtn.classList.remove('active');
+                    return;
+                }
+
+                // Test audio with a short phrase after user interaction
+                const testAudio = () => {
+                    try {
+                        const testUtterance = new SpeechSynthesisUtterance('Audio test');
+                        testUtterance.volume = 0.1; // Very quiet
+                        testUtterance.rate = 2.0;   // Very fast
+                        this.synth.speak(testUtterance);
+                        console.log('Audio test successful');
+                    } catch (error) {
+                        console.log('Audio test failed:', error);
+                    }
+                };
+
+                // Wait for first user interaction to test audio
+                document.addEventListener('click', testAudio, { once: true });
+            }
+
+            clearMessages() {
+                this.messages.innerHTML = `
+                    <div class="message skippy-message">
+                        <div class="message-header">Skippy:</div>
+                        <div>Messages cleared. I suppose you want a fresh start? How original. Current mode: ${this.displayMode.toUpperCase()}</div>
+                    </div>
+                `;
+            }
+
+            showLoading(show) {
+                this.loading.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            new SkippyMobile();
+        });
+    </script>
+</body>
+</html>

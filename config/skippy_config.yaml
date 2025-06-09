@@ -1,0 +1,30 @@
+skippy:
+  personality:
+    name: "Skippy"
+    version: "1.0.0"
+    base_traits:
+      sarcasm: 7
+      helpfulness: 9
+      technical_expertise: 8
+
+  voice:
+    wake_words: ["hey skippy", "skippy"]
+    conversation_modes:
+      - general
+      - conversational
+      - trading
+      - coding
+    
+  database:
+    host: "localhost"
+    port: 5432
+    name: "skippy"
+    
+  redis:
+    host: "localhost"
+    port: 6379
+
+  logging:
+    level: "INFO"
+    conversation_retention_days: 365
+    sync_offline_conversations: true

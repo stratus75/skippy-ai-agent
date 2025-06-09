@@ -1,0 +1,337 @@
+H:\skippy-ai-agent\home-integration>skippy_diagnostic.py
+🔍 SKIPPY WORKFLOW DIAGNOSTIC TOOL
+============================================================
+🌐 Testing URL: http://192.168.0.229:5678/webhook-test/skippy/chat
+🕐 Started at: 2025-06-07 00:56:18
+
+🧪 RUNNING DIAGNOSTIC TESTS
+============================================================
+
+🧪 Testing: 'turn on the lights'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:18 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'set lights to blue'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:19 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'activate movie mode'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:20 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'tell me a joke'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:22 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'what's the weather?'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:23 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'help me plan my day'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Fri, 06 Jun 2025 23:56:24 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+📊 DIAGNOSTIC SUMMARY
+============================================================
+✅ Successful HTTP responses: 0/6
+✅ Valid JSON responses: 0/6
+✅ Correct route detection: 0/6
+✅ Personality in responses: 0/6
+
+🔧 RECOMMENDATIONS
+============================================================
+❌ CRITICAL: Workflow not returning JSON
+   Fix: Update 'Respond to Webhook' node to return structured JSON
+   Add: Final formatting node before webhook response
+❌ ROUTING: Route detection not working
+   Fix: Check Switch/Router node conditions
+   Add: Proper route field in response formatting
+❌ PERSONALITY: Skippy's character not consistent
+   Fix: Ensure all response paths include personality prompts
+   Add: Skippy character overlay to all responses
+
+🕐 Completed at: 2025-06-07 00:56:24
+
+H:\skippy-ai-agent\home-integration>skippy_diagnostic.py
+🔍 SKIPPY WORKFLOW DIAGNOSTIC TOOL
+============================================================
+🌐 Testing URL: http://192.168.0.229:5678/webhook-test/skippy/chat
+🕐 Started at: 2025-06-07 01:01:57
+
+🧪 RUNNING DIAGNOSTIC TESTS
+============================================================
+
+🧪 Testing: 'turn on the lights'
+--------------------------------------------------
+📊 Status Code: 200
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:01:56 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'}
+❌ Invalid JSON Response:
+Raw text:
+🔧 ISSUE: Workflow returning raw text instead of JSON
+
+🧪 Testing: 'set lights to blue'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:01:57 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'activate movie mode'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:01:58 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'tell me a joke'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:01:59 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'what's the weather?'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:02:00 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'help me plan my day'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:02:01 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+📊 DIAGNOSTIC SUMMARY
+============================================================
+✅ Successful HTTP responses: 1/6
+✅ Valid JSON responses: 0/6
+✅ Correct route detection: 0/6
+✅ Personality in responses: 0/6
+
+🔧 RECOMMENDATIONS
+============================================================
+❌ CRITICAL: Workflow not returning JSON
+   Fix: Update 'Respond to Webhook' node to return structured JSON
+   Add: Final formatting node before webhook response
+❌ ROUTING: Route detection not working
+   Fix: Check Switch/Router node conditions
+   Add: Proper route field in response formatting
+❌ PERSONALITY: Skippy's character not consistent
+   Fix: Ensure all response paths include personality prompts
+   Add: Skippy character overlay to all responses
+
+🕐 Completed at: 2025-06-07 01:02:03
+
+H:\skippy-ai-agent\home-integration>skippy_diagnostic.py
+🔍 SKIPPY WORKFLOW DIAGNOSTIC TOOL
+============================================================
+🌐 Testing URL: http://192.168.0.229:5678/webhook-test/skippy/chat
+🕐 Started at: 2025-06-07 01:03:34
+
+🧪 RUNNING DIAGNOSTIC TESTS
+============================================================
+
+🧪 Testing: 'turn on the lights'
+--------------------------------------------------
+📊 Status Code: 200
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:34 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'}
+❌ Invalid JSON Response:
+Raw text:
+🔧 ISSUE: Workflow returning raw text instead of JSON
+
+🧪 Testing: 'set lights to blue'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'activate movie mode'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:36 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'tell me a joke'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:37 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'what's the weather?'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:38 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'help me plan my day'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:03:39 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+📊 DIAGNOSTIC SUMMARY
+============================================================
+✅ Successful HTTP responses: 1/6
+✅ Valid JSON responses: 0/6
+✅ Correct route detection: 0/6
+✅ Personality in responses: 0/6
+
+🔧 RECOMMENDATIONS
+============================================================
+❌ CRITICAL: Workflow not returning JSON
+   Fix: Update 'Respond to Webhook' node to return structured JSON
+   Add: Final formatting node before webhook response
+❌ ROUTING: Route detection not working
+   Fix: Check Switch/Router node conditions
+   Add: Proper route field in response formatting
+❌ PERSONALITY: Skippy's character not consistent
+   Fix: Ensure all response paths include personality prompts
+   Add: Skippy character overlay to all responses
+
+🕐 Completed at: 2025-06-07 01:03:40
+
+H:\skippy-ai-agent\home-integration>skippy_diagnostic.py
+🔍 SKIPPY WORKFLOW DIAGNOSTIC TOOL
+============================================================
+🌐 Testing URL: http://192.168.0.229:5678/webhook-test/skippy/chat
+🕐 Started at: 2025-06-07 01:06:32
+
+🧪 RUNNING DIAGNOSTIC TESTS
+============================================================
+
+🧪 Testing: 'turn on the lights'
+--------------------------------------------------
+📊 Status Code: 200
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:31 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'}
+❌ Invalid JSON Response:
+Raw text:
+🔧 ISSUE: Workflow returning raw text instead of JSON
+
+🧪 Testing: 'set lights to blue'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:32 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'activate movie mode'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:33 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'tell me a joke'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'what's the weather?'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:36 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'help me plan my day'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 00:06:37 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+📊 DIAGNOSTIC SUMMARY
+============================================================
+✅ Successful HTTP responses: 1/6
+✅ Valid JSON responses: 0/6
+✅ Correct route detection: 0/6
+✅ Personality in responses: 0/6
+
+🔧 RECOMMENDATIONS
+============================================================
+❌ CRITICAL: Workflow not returning JSON
+   Fix: Update 'Respond to Webhook' node to return structured JSON
+   Add: Final formatting node before webhook response
+❌ ROUTING: Route detection not working
+   Fix: Check Switch/Router node conditions
+   Add: Proper route field in response formatting
+❌ PERSONALITY: Skippy's character not consistent
+   Fix: Ensure all response paths include personality prompts
+   Add: Skippy character overlay to all responses
+
+🕐 Completed at: 2025-06-07 01:06:39
+
+H:\skippy-ai-agent\home-integration>skippy_diagnostic.py
+🔍 SKIPPY WORKFLOW DIAGNOSTIC TOOL
+============================================================
+🌐 Testing URL: http://192.168.0.229:5678/webhook-test/skippy/chat
+🕐 Started at: 2025-06-07 10:35:49
+
+🧪 RUNNING DIAGNOSTIC TESTS
+============================================================
+
+🧪 Testing: 'turn on the lights'
+--------------------------------------------------
+📊 Status Code: 200
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:50 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'}
+❌ Invalid JSON Response:
+Raw text:
+🔧 ISSUE: Workflow returning raw text instead of JSON
+
+🧪 Testing: 'set lights to blue'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:51 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'activate movie mode'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:52 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'tell me a joke'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:53 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'what's the weather?'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:54 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+🧪 Testing: 'help me plan my day'
+--------------------------------------------------
+📊 Status Code: 404
+📥 Headers: {'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '237', 'ETag': 'W/"ed-HU8Zj9/NlTReKUCK699fmvG9yLw"', 'Vary': 'Accept-Encoding', 'Date': 'Sat, 07 Jun 2025 09:35:55 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'}
+❌ HTTP Error: {"code":404,"message":"The requested webhook \"skippy/chat\" is not registered.","hint":"Click the 'Execute workflow' button on the canvas, then try again. (In test mode, the webhook only works for one call after you click this button)"}
+
+📊 DIAGNOSTIC SUMMARY
+============================================================
+✅ Successful HTTP responses: 1/6
+✅ Valid JSON responses: 0/6
+✅ Correct route detection: 0/6
+✅ Personality in responses: 0/6
+
+🔧 RECOMMENDATIONS
+============================================================
+❌ CRITICAL: Workflow not returning JSON
+   Fix: Update 'Respond to Webhook' node to return structured JSON
+   Add: Final formatting node before webhook response
+❌ ROUTING: Route detection not working
+   Fix: Check Switch/Router node conditions
+   Add: Proper route field in response formatting
+❌ PERSONALITY: Skippy's character not consistent
+   Fix: Ensure all response paths include personality prompts
+   Add: Skippy character overlay to all responses
+
+🕐 Completed at: 2025-06-07 10:35:56

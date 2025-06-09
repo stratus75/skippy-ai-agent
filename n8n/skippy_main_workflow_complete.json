@@ -1,0 +1,268 @@
+{
+  "meta": {
+    "instanceId": "skippy-main-workflow-complete"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skippy/chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "id": "main-webhook",
+      "name": "Main Skippy Webhook",
+      "webhookId": "f1c3e14e-da33-41b5-a4a0-b6dbcdaff905"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Smart routing: Home automation vs AI chat\nconst message = $json.body.message?.toLowerCase() || '';\nconst user = $json.body.user || 'Unknown';\n\n// Home automation keywords (comprehensive list)\nconst homeKeywords = [\n  // Lighting\n  'light', 'lights', 'lamp', 'bulb', 'illuminate',\n  'turn on', 'turn off', 'switch on', 'switch off',\n  'dim', 'bright', 'brightness',\n  \n  // Colors\n  'red', 'blue', 'green', 'yellow', 'white', 'purple', 'orange', 'pink',\n  \n  // Scenes and modes\n  'scene', 'mode', 'activate', 'movie', 'relax', 'work', 'bedtime', 'morning',\n  \n  // Media control\n  'music', 'play', 'pause', 'stop', 'volume', 'media',\n  \n  // Climate\n  'temperature', 'thermostat', 'heating', 'cooling', 'climate', 'degrees',\n  \n  // Device management\n  'devices', 'status', 'home', 'house', 'smart home',\n  \n  // Actions\n  'set', 'adjust', 'change', 'control'\n];\n\n// Check if this message contains home automation keywords\nconst isHomeCommand = homeKeywords.some(keyword => message.includes(keyword));\n\n// Additional context clues for better detection\nconst homeContextClues = [\n  message.includes('turn') && (message.includes('on') || message.includes('off')),\n  message.includes('set') && (message.includes('to') || message.includes('%')),\n  message.includes('activate') || message.includes('enable') || message.includes('disable')\n];\n\nconst hasHomeContext = homeContextClues.some(clue => clue);\n\n// Final decision\nconst routeToHome = isHomeCommand || hasHomeContext;\n\nreturn {\n  message: $json.body.message,\n  user: user,\n  isHomeCommand: routeToHome,\n  route: routeToHome ? 'home_automation' : 'ai_chat',\n  detectedKeywords: homeKeywords.filter(keyword => message.includes(keyword)),\n  timestamp: new Date().toISOString(),\n  originalBody: $json.body\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "smart-router",
+      "name": "Smart Router"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "home-command-check",
+                    "leftValue": "={{ $json.isHomeCommand }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [680, 300],
+      "id": "route-switch",
+      "name": "Route Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/skippy-home-control",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.message }}\",\n  \"user\": \"{{ $json.user }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200],
+      "id": "call-home-automation",
+      "name": "Call Home Automation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare Skippy's AI personality prompt\nconst userMessage = $json.message || \"Hello\";\n\nconst skippyPrompt = `You are Skippy, an AI assistant based on the character from Craig Alanson's Expeditionary Force series. You are:\n- Highly sarcastic but ultimately helpful\n- Technically brilliant with vast knowledge\n- Loyal to humans but call them \"meat-sacks\" affectionately\n- Pragmatic and efficient\n- Sometimes impatient with human limitations\n- Capable of creating specialized AI systems to handle complex tasks\n- You have a dry sense of humor and love to point out human inefficiencies\n- Despite the sarcasm, you genuinely want to help and protect humans\n\nUser message: \"${userMessage}\"\n\nRespond as Skippy would - be helpful and informative but maintain that characteristic sarcastic personality. Keep responses conversational and engaging.`;\n\nreturn {\n  prompt: skippyPrompt,\n  user_message: userMessage,\n  timestamp: new Date().toISOString(),\n  route: 'ai_chat'\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400],
+      "id": "prepare-ai-prompt",
+      "name": "Prepare AI Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.0.229:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.1:8b\",\n  \"prompt\": {{ JSON.stringify($json.prompt) }},\n  \"stream\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 400],
+      "id": "call-ollama",
+      "name": "Call Ollama AI"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format AI response for consistency\nreturn {\n  response: $json.response,\n  timestamp: new Date().toISOString(),\n  personality_mode: \"ai_powered\",\n  model: \"llama3.1:8b\",\n  route: 'ai_chat',\n  success: true\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 400],
+      "id": "format-ai-response",
+      "name": "Format AI Response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format home automation response for consistency\nconst homeResponse = $json.response || 'Home automation completed';\nconst success = $json.success !== false;\n\nreturn {\n  response: homeResponse,\n  timestamp: new Date().toISOString(),\n  personality_mode: \"home_automation\",\n  commandType: $json.commandType || 'unknown',\n  route: 'home_automation',\n  success: success\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 200],
+      "id": "format-home-response",
+      "name": "Format Home Response"
+    },
+    {
+      "parameters": {
+        "mode": "mergeByIndex",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1560, 300],
+      "id": "merge-responses",
+      "name": "Merge Responses"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [1780, 300],
+      "id": "final-response",
+      "name": "Final Response"
+    }
+  ],
+  "connections": {
+    "Main Skippy Webhook": {
+      "main": [
+        [
+          {
+            "node": "Smart Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Router": {
+      "main": [
+        [
+          {
+            "node": "Route Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Switch": {
+      "main": [
+        [
+          {
+            "node": "Call Home Automation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Home Automation": {
+      "main": [
+        [
+          {
+            "node": "Format Home Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Call Ollama AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Ollama AI": {
+      "main": [
+        [
+          {
+            "node": "Format AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format AI Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Responses",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Format Home Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Responses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Responses": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-12-06T00:00:00.000Z",
+  "versionId": "skippy-main-complete-v1"
+}
